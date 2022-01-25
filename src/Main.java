@@ -16,8 +16,7 @@ public class Main {
     }
 
     private static void parseText() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("src/opc_output_rl.t"));
-        try {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/opc_output_rl.t"))) {
             while (true) {
                 String line = reader.readLine();
                 if (line == null)
@@ -32,8 +31,6 @@ public class Main {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            reader.close();
         }
 
     }
