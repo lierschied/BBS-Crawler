@@ -3,20 +3,17 @@ import java.util.Date;
 public class Sensor {
     private int id;
     private String sensorName;
-    private String sensorZustand;
+    private String sensorState;
     private Date timestamp;
-    private String sensorlokalisierung;
-    private SensorTyp sensorTyp;
+    private SensorType sensorType;
 
 
-    public Sensor(int id, String sensorName, String sensorZustand, SensorTyp sensorTyp, Date timestamp,
-                  String sensorlokalisierung) {
+    public Sensor(int id, String sensorName, String sensorZustand, SensorType sensorTyp, Date timestamp) {
         this.id = id;
         this.sensorName = sensorName;
-        this.sensorZustand = sensorZustand;
-        this.sensorTyp = sensorTyp;
+        this.sensorState = sensorZustand;
+        this.sensorType = sensorTyp;
         this.timestamp = timestamp;
-        this.sensorlokalisierung = sensorlokalisierung;
     }
 
 
@@ -40,23 +37,23 @@ public class Sensor {
     }
 
 
-    public String getSensorZustand() {
-        return sensorZustand;
+    public String getSensorState() {
+        return sensorState;
     }
 
 
-    public void setSensorZustand(String sensorZustand) {
-        this.sensorZustand = sensorZustand;
+    public void setSensorState(String sensorState) {
+        this.sensorState = sensorState;
     }
 
 
-    public SensorTyp getSensorTyp() {
-        return sensorTyp;
+    public SensorType getSensorType() {
+        return sensorType;
     }
 
 
-    public void setSensorTyp(SensorTyp sensorTyp) {
-        this.sensorTyp = sensorTyp;
+    public void setSensorType(SensorType sensorType) {
+        this.sensorType = sensorType;
     }
 
 
@@ -70,12 +67,4 @@ public class Sensor {
     }
 
 
-    public String getSensorlokalisierung() {
-        return sensorlokalisierung;
-    }
-
-
-    public void setSensorlokalisierung(String sensorlokalisierung) {
-        this.sensorlokalisierung = sensorlokalisierung;
-    }
 }

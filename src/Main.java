@@ -8,18 +8,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
+    //regex patterns
     private static final String DISPLAY_NAME = "DisplayName=\"([^\"]*)\"";
     private static final String SENSOR_VALUES = "-> VALUE: DataValue\\((.*)\\)";
     private static final String SENSOR_ID = "NodeId=\"ns=3;s=\"([^\"]*)\"";
 
+    //compiled regex patterns to avoid recompiling them every time for each loop cycle (file)
     private static final Pattern displayNamePattern = Pattern.compile(DISPLAY_NAME);
     private static final Pattern sensorValuesPattern = Pattern.compile(SENSOR_VALUES);
     private static final Pattern sensorIdPattern = Pattern.compile(SENSOR_ID);
 
     public static void main(String[] args) throws IOException {
         Scanner s = new Scanner(System.in);
-        System.out.println(args.length);
         String dirPath;
+
+        //path can also be invoked as the first command line parameter
         if (args.length > 0) {
             dirPath = args[0];
         } else {
@@ -44,8 +47,7 @@ public class Main {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             while (true) {
                 String line = reader.readLine();
-                if (line == null)
-                    break;
+                if (line == null) break;
                 if (line.contains("BrowseName=\"3:+")) {
                     System.out.println("ID: " + firstGroupMatch(sensorIdPattern, line));
 
@@ -55,7 +57,6 @@ public class Main {
                     String sensorValues = firstGroupMatch(sensorValuesPattern, line);
                     String[] values = sensorValues.split(",");
                     System.out.println(Arrays.toString(values));
-
 
                 }
             }
@@ -67,12 +68,17 @@ public class Main {
     }
 
 
+    /**
+     * for loading the opc_output_rl_* files from the data_ready dir
+     *
+     * @param dirPath path to the data_ready directory
+     * @return list of all files and directories
+     */
     public static File[] loadFiles(String dirPath) {
         File directoryPath = new File(dirPath);
-        //List of all files and directories
         File[] filesList = directoryPath.listFiles();
         assert filesList != null;
-        System.out.println(String.format("Loaded %s file(s) from %s.", filesList.length, directoryPath));
+        System.out.printf("Loaded %s file(s) from %s.%n", filesList.length, directoryPath);
         return filesList;
     }
 

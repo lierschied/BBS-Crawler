@@ -1,12 +1,12 @@
 public class Station {
     private int id;
     private String name;
-    private String zustand;
+    private String state;
 
-    public Station(int id, String name, String zustand) {
+    public Station(int id, String name, String state) {
         this.id = id;
         this.name = name;
-        this.zustand = zustand;
+        this.state = state;
     }
 
     public int getId() {
@@ -25,11 +25,11 @@ public class Station {
         this.name = name;
     }
 
-    public String getZustand() {
-        return zustand;
+    public String getState() {
+        return state;
     }
 
-    public void setZustand(String zustand) {
-        this.zustand = zustand;
+    public void setState(String state) {
+        this.state = state;
     }
 }
