@@ -67,7 +67,6 @@ public class Main {
 
     }
 
-
     /**
      * for loading the opc_output_rl_* files from the data_ready dir
      *
