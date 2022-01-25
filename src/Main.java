@@ -2,7 +2,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +19,9 @@ public class Main {
     private static final Pattern displayNamePattern = Pattern.compile(DISPLAY_NAME);
     private static final Pattern sensorValuesPattern = Pattern.compile(SENSOR_VALUES);
     private static final Pattern sensorIdPattern = Pattern.compile(SENSOR_ID);
+
+    private static final HashMap<String, String> sensors = new HashMap<String, String>();
+    private static final List<String> changes = new ArrayList<String>();
 
     public static void main(String[] args) throws IOException {
         Scanner s = new Scanner(System.in);
@@ -34,7 +39,12 @@ public class Main {
 
         for (File f : files) {
             System.out.println(f.getName());
-            parseText(f.getAbsolutePath());
+            parseText(f);
+        }
+
+        System.out.println("-----------------\n-----------------\nCHANGES:");
+        for (String change : changes) {
+            System.out.println(change);
         }
     }
 
@@ -43,20 +53,33 @@ public class Main {
      *
      * @throws IOException if file fails to open
      */
-    private static void parseText(String fileName) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+    private static void parseText(File file) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
             while (true) {
                 String line = reader.readLine();
                 if (line == null) break;
                 if (line.contains("BrowseName=\"3:+")) {
-                    System.out.println("ID: " + firstGroupMatch(sensorIdPattern, line));
+                    String sensorId = firstGroupMatch(sensorIdPattern, line);
+                    System.out.println("ID: " + sensorId);
 
                     String displayName = firstGroupMatch(displayNamePattern, line);
-                    System.out.println(displayName);
+                    System.out.println("Name: " + displayName);
 
                     String sensorValues = firstGroupMatch(sensorValuesPattern, line);
                     String[] values = sensorValues.split(",");
-                    System.out.println(Arrays.toString(values));
+
+                    String value = firstGroupMatch(Pattern.compile("value=(.+)"), values[0]);
+                    System.out.println("Value: " + value);
+
+                    if (sensors.containsKey(sensorId)) {
+                        String oldValue = sensors.get(sensorId);
+                        if (!value.equals(oldValue)) {
+                            String result = String.format("Change detected for Sensor \"%s\" in File \"%s\":\nold value = %s\nnew value = %s", displayName, file.getName(), oldValue, value);
+                            changes.add(result);
+                        }
+                    }
+
+                    sensors.put(sensorId, value);
 
                 }
             }
