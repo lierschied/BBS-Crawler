@@ -1,20 +1,27 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
     private static final String DISPLAY_NAME = "DisplayName=\"([^\"]*)\"";
     private static final String SENSOR_VALUES = "-> VALUE: DataValue\\((.*)\\)";
+    private static final String SENSOR_ID = "NodeId=\"ns=3;s=\"([^\"]*)\"";
 
     private static final Pattern displayNamePattern = Pattern.compile(DISPLAY_NAME);
     private static final Pattern sensorValuesPattern = Pattern.compile(SENSOR_VALUES);
+    private static final Pattern sensorIdPattern = Pattern.compile(SENSOR_ID);
 
     public static void main(String[] args) throws IOException {
         parseText();
     }
 
+    /**
+     * parsing the opc_output data for sensor values
+     * @throws IOException if file fails to open
+     */
     private static void parseText() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader("src/opc_output_rl.t"))) {
             while (true) {
@@ -22,10 +29,16 @@ public class Main {
                 if (line == null)
                     break;
                 if (line.contains("BrowseName=\"3:+")) {
+                    System.out.println("ID: " + firstGroupMatch(sensorIdPattern, line));
+
                     String displayName = firstGroupMatch(displayNamePattern, line);
                     System.out.println(displayName);
+
                     String sensorValues = firstGroupMatch(sensorValuesPattern, line);
-                    System.out.println(sensorValues);
+                    String[] values = sensorValues.split(",");
+                    System.out.println(Arrays.toString(values));
+
+
                 }
             }
 
