@@ -5,6 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
+    private static final String DISPLAY_NAME = "DisplayName=\"([^\"]*)\"";
+    private static final String SENSOR_VALUES = "-> VALUE: DataValue\\((.*)\\)";
+
+    private static final Pattern displayNamePattern = Pattern.compile(DISPLAY_NAME);
+    private static final Pattern sensorValuesPattern = Pattern.compile(SENSOR_VALUES);
 
     public static void main(String[] args) throws IOException {
         parseText();
@@ -12,19 +17,16 @@ public class Main {
 
     private static void parseText() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("src/opc_output_rl.t"));
-        int c = 0;
         try {
             while (true) {
                 String line = reader.readLine();
                 if (line == null)
                     break;
                 if (line.contains("BrowseName=\"3:+")) {
-                    c++;
-                    Pattern p = Pattern.compile(".+DisplayName=(.+)");
-                    Matcher m = p.matcher(line);
-                    if (m.matches()) {
-                        System.out.println(m.group(1));
-                    }
+                    String displayName = firstGroupMatch(displayNamePattern, line);
+                    System.out.println(displayName);
+                    String sensorValues = firstGroupMatch(sensorValuesPattern, line);
+                    System.out.println(sensorValues);
                 }
             }
 
@@ -33,8 +35,22 @@ public class Main {
         } finally {
             reader.close();
         }
-        System.out.println(c);
 
+    }
+
+    /**
+     * @param p compiled regex Pattern
+     * @param toMatch string to match the pattern against
+     * @return first captured group from a regex
+     */
+    private static String firstGroupMatch(Pattern p, String toMatch) {
+        Matcher m = p.matcher(toMatch);
+
+        if (m.find()) {
+            return m.group(1);
+        }
+
+        return "no match found!";
     }
 
 }
