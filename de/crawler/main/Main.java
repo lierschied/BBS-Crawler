@@ -77,28 +77,9 @@ public class Main {
                     String value = firstGroupMatch(Pattern.compile("value=(.+)"), values[0]);
                     System.out.println("Value: " + value);
 
-                	Sensor sensor = new Sensor(sensorId, displayName, value == "true", null, null);
-
-
-                    boolean newSesorZustand = value == "true";
-                    if (sensors.contains(sensor)) {
-                    	Optional<Sensor> oldSensor = sensors.stream()
-                    			.filter(s -> s.getId() == sensor.getId())
-                    			.findFirst();
-                    	
-                    	if ((oldSensor.get() != null) && (newSesorZustand != oldSensor.get().getSensorZustand())) {
-                            String result = String.format("Change detected for Sensor \"%s\" in File \"%s\":\nold value = %s\nnew value = %s", 
-                            		displayName,
-                            		file.getName(),
-                            		oldSensor.get().getSensorZustand(),
-                            		value);
-                            
-                            changes.add(result);
-                            sensors.remove(oldSensor.get());
-                    	}
-                    }
+                    boolean sensorZustand = value == "true";
                     
-                    sensors.add(sensor);
+                    addCreateSensor(file, sensorId, displayName, sensorZustand);
                 }
             }
 
@@ -135,6 +116,29 @@ public class Main {
         }
 
         return "no match found!";
+    }
+    
+    private static void addCreateSensor(File file, String sensorId, String sensorName, boolean sensorZustand) {
+    	Sensor sensor = new Sensor(sensorId, sensorName, sensorZustand, null, null);
+
+        if (sensors.contains(sensor)) {
+        	Optional<Sensor> oldSensor = sensors.stream()
+        			.filter(s -> s.getId() == sensor.getId())
+        			.findFirst();
+        	
+        	if ((oldSensor.get() != null) && (sensorZustand != oldSensor.get().getSensorZustand())) {
+                String result = String.format("Change detected for Sensor \"%s\" in File \"%s\":\nold value = %s\nnew value = %s", 
+                		sensorName,
+                		file.getName(),
+                		oldSensor.get().getSensorZustand(),
+                		sensorZustand);
+                
+                changes.add(result);
+                sensors.remove(oldSensor.get());
+        	}
+        }
+        
+        sensors.add(sensor);
     }
 
 }
