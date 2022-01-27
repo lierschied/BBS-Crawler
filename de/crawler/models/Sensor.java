@@ -8,13 +8,13 @@ public class Sensor {
     private String id;
     private String sensorName;
     private Date timestamp;
-    private boolean sensorZustand;
+    private String sensorState;
     private SensorType sensorType;
  
-    public Sensor(String id, String sensorName, boolean sensorZustand, SensorType sensorTyp, Date timestamp) {
+    public Sensor(String id, String sensorName, String sensorState, SensorType sensorTyp, Date timestamp) {
         this.id = id;
         this.sensorName = sensorName;
-        this.sensorZustand = sensorZustand;
+        this.sensorState = sensorState;
         this.sensorType = sensorTyp;
         this.timestamp = timestamp;
     }
@@ -35,12 +35,12 @@ public class Sensor {
         this.sensorName = sensorName;
     }
 
-    public boolean getSensorZustand() {
-        return sensorZustand;
+    public String getSensorState() {
+        return sensorState;
     }
 
-    public void setSensorZustand(boolean sensorZustand) {
-        this.sensorZustand = sensorZustand;
+    public void setSensorState(String sensorState) {
+        this.sensorState = sensorState;
     }
 
     public SensorType getSensorType() {

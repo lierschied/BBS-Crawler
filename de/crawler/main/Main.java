@@ -15,6 +15,20 @@ import java.util.stream.Collectors;
 
 import de.crawler.models.Sensor;
 
+/**
+ * @author Benutzer1
+ *
+ */
+/**
+ * @author KH
+ *	26-01-2022 Refactoring & Sensor Method implement
+ *	27-01-2022 Methods revised
+ */
+/**
+ * @author Benutzer1
+ *
+ */
+
 public class Main {
     //regex patterns
     private static final String DISPLAY_NAME = "DisplayName=\"([^\"]*)\"";
@@ -76,10 +90,11 @@ public class Main {
 
                     String value = firstGroupMatch(Pattern.compile("value=(.+)"), values[0]);
                     System.out.println("Value: " + value);
-
-                    boolean sensorZustand = value == "true";
                     
-                    addCreateSensor(file, sensorId, displayName, sensorZustand);
+                    String filename = file.getName();   
+                	Sensor sensor = new Sensor(sensorId, displayName, value, null, null);
+   
+                    addSensorToSensorList(sensor, filename);
                 }
             }
 
@@ -93,6 +108,7 @@ public class Main {
      * for loading the opc_output_rl_* files from the data_ready dir
      *
      * @param dirPath path to the data_ready directory
+     * 
      * @return list of all files and directories
      */
     public static File[] loadFiles(String dirPath) {
@@ -106,6 +122,7 @@ public class Main {
     /**
      * @param p       compiled regex Pattern
      * @param toMatch string to match the pattern against
+     * 
      * @return first captured group from a regex
      */
     private static String firstGroupMatch(Pattern p, String toMatch) {
@@ -118,27 +135,38 @@ public class Main {
         return "no match found!";
     }
     
-    private static void addCreateSensor(File file, String sensorId, String sensorName, boolean sensorZustand) {
-    	Sensor sensor = new Sensor(sensorId, sensorName, sensorZustand, null, null);
-
-        if (sensors.contains(sensor)) {
-        	Optional<Sensor> oldSensor = sensors.stream()
-        			.filter(s -> s.getId() == sensor.getId())
-        			.findFirst();
+    /**
+     * @param sensor   to add to SensorList
+     * @param filename where the sensor has been found
+     */
+    private static void addSensorToSensorList(Sensor sensor, String filename) {	
+        Sensor oldSensor = sensors.stream()
+        		.filter(s -> s.getId().equals(sensor.getId()))
+        		.findFirst().orElse(null);
         	
-        	if ((oldSensor.get() != null) && (sensorZustand != oldSensor.get().getSensorZustand())) {
-                String result = String.format("Change detected for Sensor \"%s\" in File \"%s\":\nold value = %s\nnew value = %s", 
-                		sensorName,
-                		file.getName(),
-                		oldSensor.get().getSensorZustand(),
-                		sensorZustand);
+        if ((oldSensor != null) && (sensor.getSensorState() != oldSensor.getSensorState())) {
+               String result = sensorsInfoToString(oldSensor, sensor, filename);
                 
-                changes.add(result);
-                sensors.remove(oldSensor.get());
-        	}
+               changes.add(result);
+               sensors.remove(oldSensor);
         }
         
         sensors.add(sensor);
+    }
+    
+    /**
+     * @param oldSensor sensor that is already in the list
+     * @param newSensor	sensor that has its value changed
+     * @param filename  where the sensor has been found
+     * 
+     * @return Sensors value as String
+     */
+    private static String sensorsInfoToString(Sensor oldSensor, Sensor newSensor, String filename) {
+    	return String.format("Change detected for Sensor \"%s\" in File \"%s\":\nold value = %s\nnew value = %s", 
+    			newSensor.getSensorName(),
+            	filename,
+            	oldSensor.getSensorState(),
+            	newSensor.getSensorState());
     }
 
 }
