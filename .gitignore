@@ -1,3 +1,6 @@
 .idea
+.classpath
+.project
 Crawler.iml
 out
+/bin/
