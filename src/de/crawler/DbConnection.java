@@ -7,7 +7,12 @@ public class DbConnection {
     private static final String dbUsername = "root";
     private static final String dbPassword = "password";
 
+    private static Connection connection = null;
+
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+        if (connection == null) {
+            connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+        }
+        return connection;
     }
 }
