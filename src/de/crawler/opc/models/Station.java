@@ -1,4 +1,4 @@
-package de.crawler.models;
+package de.crawler.opc.models;
 
 public class Station {
     private int id;

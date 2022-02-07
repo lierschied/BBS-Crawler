@@ -1,4 +1,4 @@
-package de.crawler.models;
+package de.crawler.opc.models;
 
 import java.util.Date;
 
