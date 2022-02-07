@@ -65,10 +65,14 @@ public class Main {
         for (File f : files) {
             System.out.println("Parsing from file: " + Colorize.blue(f.getName()));
             parseFile(f);
+            printSensorData();
         }
         totalTime = System.nanoTime() - startTime;
     }
 
+    /**
+     * console output total file, sensor count and runtime
+     */
     private static void printStats() {
         System.out.println("\n-----------------\n-----------------\n\n" + Colorize.yellow("Runtime:"));
         System.out.printf("Total file count: %s\n", Colorize.blue(files.length));
@@ -77,6 +81,16 @@ public class Main {
         System.out.printf("Avg. parse time per file in milliseconds: %sms\n", Colorize.blue(avg));
     }
 
+    /**
+     * console output for the sensor data for all objects within the sensorList hashmap
+     */
+    private static void printSensorData() {
+        sensorList.forEach((key, sensor) -> System.out.printf("%s\n\n", sensor));
+    }
+
+    /**
+     * console output for the detected changes
+     */
     private static void printChanges() {
         System.out.println("\n-----------------\n-----------------\n\n" + Colorize.yellow("CHANGES:"));
 
@@ -112,8 +126,10 @@ public class Main {
             //read only first occurrence of sensors within the first NodeId="ns=3;s=Inputs"
             //together with the first while this reduces parsing time by 45-50%
             //maybe this?? => && line.contains("_ _ _ _ _")
-            while ((line = reader.readLine()) != null) {
+            int c = 0; // this counter is to abort after 38 sensors are found (current max sensors)
+            while ((line = reader.readLine()) != null && c <= 38) {
                 if (!line.contains("BrowseName=\"3:+")) continue;
+                c++;
                 String sensorId = firstGroupMatch(sensorIdPattern, line);
 
                 String displayName = firstGroupMatch(displayNamePattern, line);
@@ -148,8 +164,6 @@ public class Main {
                     sensorList.put(sensorId, sensor);
                 }
                 sensor.setData(data);
-                System.out.printf("%s\n\n", sensor);
-
             }
         } catch (IOException e) {
             e.printStackTrace();
