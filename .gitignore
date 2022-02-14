@@ -5,3 +5,4 @@ Crawler.iml
 out
 /bin/
 src/de/crawler/utils/Test.java
+data_ready

@@ -3,7 +3,7 @@ package de.crawler;
 import java.sql.*;
 
 public class DbConnection {
-    private static final String dbUrl = "jdbc:mysql://localhost:3306/test";
+    private static final String dbUrl = "jdbc:mysql://localhost:3306/opc";
     private static final String dbUsername = "root";
     private static final String dbPassword = "password";
 

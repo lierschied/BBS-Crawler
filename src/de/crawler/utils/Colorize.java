@@ -5,11 +5,12 @@ package de.crawler.utils;
  */
 public class Colorize {
 
-    private static final String colorRed = (char) 27 + "[1;31m";
-    private static final String colorGreen = (char) 27 + "[1;32m";
-    private static final String colorBlue = (char) 27 + "[1;34m";
-    private static final String colorYellow = (char) 27 + "[1;33m";
-    private static final String colorReset = (char) 27 + "[0m";
+    private static final char ESCAPE = (char) 27;
+    private static final String COLOR_RED = ESCAPE + "[1;31m";
+    private static final String COLOR_GREEN = ESCAPE + "[1;32m";
+    private static final String COLOR_BLUE = ESCAPE + "[1;34m";
+    private static final String COLOR_YELLOW = ESCAPE + "[1;33m";
+    private static final String COLOR_RESET = ESCAPE + "[0m";
 
     /**
      * positive/success
@@ -18,9 +19,9 @@ public class Colorize {
      * @return colored string
      */
     public static String green(String str) {
-        return colorGreen
+        return COLOR_GREEN
                 + str
-                + colorReset;
+                + COLOR_RESET;
     }
 
     /**
@@ -30,9 +31,9 @@ public class Colorize {
      * @return colored string
      */
     public static String red(String str) {
-        return colorRed
+        return COLOR_RED
                 + str
-                + colorReset;
+                + COLOR_RESET;
     }
 
     /**
@@ -42,9 +43,9 @@ public class Colorize {
      * @return colored string
      */
     public static <E> String blue(E str) {
-        return colorBlue
+        return COLOR_BLUE
                 + str
-                + colorReset;
+                + COLOR_RESET;
     }
 
     /**
@@ -54,8 +55,8 @@ public class Colorize {
      * @return colored string
      */
     public static String yellow(String str) {
-        return colorYellow
+        return COLOR_YELLOW
                 + str
-                + colorReset;
+                + COLOR_RESET;
     }
 }

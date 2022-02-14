@@ -52,6 +52,8 @@ public class Main {
         printChanges();
 
         printStats();
+
+        dbc.close();
     }
 
     /**
@@ -159,13 +161,13 @@ public class Main {
 
                 } else {
                     sensor = new Sensor(sensorId, displayName, data);
-                    //sensor.setDbc(dbc);
-                    //sensor.fetch();
+                    sensor.setDbc(dbc);
+                    sensor.fetch();
                     sensorList.put(sensorId, sensor);
                 }
                 sensor.setData(data);
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }

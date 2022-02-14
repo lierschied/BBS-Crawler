@@ -52,17 +52,17 @@ public class Sensor {
 
 
     public void update() throws SQLException {
-        PreparedStatement stm = dbc.prepareStatement("UPDATE sensor SET name = ?, value = ? WHERE id = ?");
+        PreparedStatement stm = dbc.prepareStatement("UPDATE sensor SET name = ?, data_type = ?, updated_at = NOW() WHERE id = ?");
         stm.setString(1, this.sensorName);
-        stm.setString(2, this.data.getValue());
+        stm.setString(2, this.data.getValueType());
         stm.setString(3, this.id);
         stm.executeUpdate();
     }
 
     public void create() throws SQLException {
-        PreparedStatement stm = dbc.prepareStatement("INSERT INTO sensor(name, value) VALUES(?, ?)");
+        PreparedStatement stm = dbc.prepareStatement("INSERT INTO sensor(name, data_type) VALUES(?, ?)");
         stm.setString(1, this.sensorName);
-        stm.setString(2, this.data.getValue());
+        stm.setString(2, this.data.getValueType());
         stm.executeUpdate();
     }
 
