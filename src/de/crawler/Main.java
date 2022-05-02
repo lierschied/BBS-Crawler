@@ -3,6 +3,8 @@ package de.crawler;
 import de.crawler.opc.models.DataValue;
 import de.crawler.opc.models.Sensor;
 import de.crawler.utils.Colorize;
+import de.judge.opc_test.OPCClientETS;
+import de.judge.opc_test.Station;
 
 import java.io.*;
 import java.sql.Connection;
@@ -10,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,20 +35,25 @@ public class Main {
     private static String dirPath;
     private static Connection dbc;
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws Exception {
+        dbc = DbConnection.getConnection();
+
         //path can also be invoked as the first command line parameter
         if (args.length > 0) {
             dirPath = args[0];
+            assert !dirPath.equals("") : "No directory path specified";
+           startCrawl();
         } else {
-            Scanner s = new Scanner(System.in);
-            System.out.print("Specify directory to parse files from: ");
-            dirPath = s.nextLine();
-            s.close();
+            OPCClientETS opcClient = OPCClientETS.getInstance();
+            opcClient.connectToMachine(Station.Controller);
+            File file = new File("tmp");
+            FileWriter fw = new FileWriter(file);
+            fw.write(opcClient.browseOPCServer());
+            fw.close();
+            parseFile(file);
+            opcClient.disconnect();
         }
 
-        assert !dirPath.equals("") : "No directory path specified";
-        dbc = DbConnection.getConnection();
-        startCrawl();
 
         printChanges();
 
@@ -160,12 +166,12 @@ public class Main {
                     }
 
                 } else {
-                    sensor = new Sensor(sensorId, displayName, data);
-                    sensor.setDbc(dbc);
+                    sensor = new Sensor(displayName, data);
                     sensor.fetch();
                     sensorList.put(sensorId, sensor);
                 }
                 sensor.setData(data);
+                //Crawl.addCrawl(sensor, file.getName());
             }
         } catch (IOException | SQLException e) {
             e.printStackTrace();

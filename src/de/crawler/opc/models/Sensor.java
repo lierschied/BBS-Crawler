@@ -1,5 +1,7 @@
 package de.crawler.opc.models;
 
+import de.crawler.DbConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,10 +12,9 @@ public class Sensor {
     private String sensorName;
     private DataValue data;
 
-    private Connection dbc = null;
+    private Connection dbc = DbConnection.getConnection();
 
-    public Sensor(String id, String sensorName, DataValue data) {
-        this.id = id;
+    public Sensor(String sensorName, DataValue data) throws SQLException {
         this.sensorName = sensorName;
         this.data = data;
     }
@@ -46,11 +47,6 @@ public class Sensor {
         return String.format("Id: %s\nName: %s\nData: [%s]", id, sensorName, data.toString());
     }
 
-    public void setDbc(Connection dbc) {
-        this.dbc = dbc;
-    }
-
-
     public void update() throws SQLException {
         PreparedStatement stm = dbc.prepareStatement("UPDATE sensor SET name = ?, data_type = ?, updated_at = NOW() WHERE id = ?");
         stm.setString(1, this.sensorName);
@@ -75,6 +71,7 @@ public class Sensor {
             return;
         }
         rs.next();
-        System.out.println(rs.getString("name"));
+
+        this.id = rs.getString("id");
     }
 }
