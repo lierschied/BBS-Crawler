@@ -13,7 +13,7 @@ public class OpcStreamAdapter {
     private static OpcStreamAdapter instance;
     private static Scanner stream;
     private final OPCClientETS opcClient;
-    private static Station station;
+    private static Station station = Station.RL;
 
     protected OpcStreamAdapter(Station station) throws Exception {
         OpcStreamAdapter.station = station;
@@ -24,16 +24,20 @@ public class OpcStreamAdapter {
         opcClient.browseOPCServer(sensorList);
     }
 
-    private static OpcStreamAdapter getInstance(Station station) throws Exception {
+    private static OpcStreamAdapter getInstance() throws Exception {
         if (instance == null) {
             instance = new OpcStreamAdapter(station);
         }
         return instance;
     }
 
-    public static Scanner getStream(Station station) throws Exception {
+    public static void setStation(Station s) {
+        station = s;
+    }
+
+    public static Scanner getStream() throws Exception {
         if (stream == null) {
-            OpcStreamAdapter adapter = getInstance(station);
+            OpcStreamAdapter adapter = getInstance();
             InputStream in = adapter.opcClient.getInputStream();
             stream = new Scanner(in);
         }
@@ -42,7 +46,7 @@ public class OpcStreamAdapter {
 
     public static void disconnect() {
         try {
-            getInstance(station).opcClient.disconnect();
+            getInstance().opcClient.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }

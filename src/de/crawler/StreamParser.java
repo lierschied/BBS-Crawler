@@ -1,10 +1,8 @@
 package de.crawler;
 
-import de.crawler.opc.ListSensor;
 import de.crawler.opc.models.DataValue;
 import de.crawler.opc.models.ExtendedSensor;
 import de.crawler.utils.Colorize;
-import de.judge.opc_ets.SensorList;
 import de.judge.opc_ets.Station;
 
 import java.sql.Connection;
@@ -15,14 +13,33 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import static de.crawler.Main.firstGroupMatch;
+
 public class StreamParser {
     private static final HashMap<String, ExtendedSensor> sensorList = new HashMap<>();
     private final Scanner stream;
     private final Pattern valuePattern = Pattern.compile("DataValue\\(.*\\)");
     private final Pattern namePattern = Pattern.compile("\"(.*)\"\\s--");
 
+    public StreamParser(String stationName) throws Exception {
+        this(stationFromString(stationName));
+
+    }
+
     public StreamParser(Station station) throws Exception {
-        this.stream = OpcStreamAdapter.getStream(station);
+        OpcStreamAdapter.setStation(station);
+        this.stream = OpcStreamAdapter.getStream();
+    }
+
+    private static Station stationFromString(String stationName) {
+        return switch (stationName) {
+            case "Leitstand", "cps1" -> Station.Controller;
+            case "Palettenlager", "PL" -> Station.PL;
+            case "Rohlager", "RL" -> Station.RL;
+            case "Handling", "HL" -> Station.HL;
+            case "Presse", "PR" -> Station.PR;
+            default -> throw new RuntimeException(String.format("Station %s not found", stationName));
+        };
     }
 
     private void init() throws SQLException {
@@ -63,13 +80,13 @@ public class StreamParser {
     }
 
     /**
-     * @param item  '"+AM-MB2_StopperRechts" --  -> VALUE: DataValue(value=false, statusCode=GOOD (0x00000000) "The operation succeeded.", sourceTimestamp=02/17/15 21:05:45.8950977 GMT, sourcePicoseconds=0, serverTimestamp=02/17/15 21:05:45.8950977 GMT, serverPicoseconds=0)'
+     * @param item '"+AM-MB2_StopperRechts" --  -> VALUE: DataValue(value=false, statusCode=GOOD (0x00000000) "The operation succeeded.", sourceTimestamp=02/17/15 21:05:45.8950977 GMT, sourcePicoseconds=0, serverTimestamp=02/17/15 21:05:45.8950977 GMT, serverPicoseconds=0)'
      * @throws SQLException @see ExtendedSensor.update()
      */
     private void parse(String item) throws SQLException {
-        String sensorName = Main.firstGroupMatch(namePattern, item);
+        String sensorName = firstGroupMatch(namePattern, item);
 
-        String valuesMatch = Main.firstGroupMatch(valuePattern, item);
+        String valuesMatch = firstGroupMatch(valuePattern, item);
         DataValue dataValue = DataValue.generateDataValue(valuesMatch);
 
         ExtendedSensor currentSensor = sensorList.get(sensorName);
