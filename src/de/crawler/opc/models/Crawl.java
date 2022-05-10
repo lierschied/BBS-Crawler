@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class Crawl {
 
-    public static void addCrawl(Sensor sensor, String filename) throws SQLException {
+    public static void addCrawl(ExtendedSensor sensor, String filename) throws SQLException {
         Connection dbc = DbConnection.getConnection();
         PreparedStatement stm = dbc.prepareStatement("INSERT INTO `crawl`(sensor_id, data, filename) VALUES (?, ?, ?)");
         stm.setString(1, sensor.getId());

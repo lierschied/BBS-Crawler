@@ -7,16 +7,28 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Sensor {
+public class ExtendedSensor {
     private String id;
     private String sensorName;
     private DataValue data;
 
-    private Connection dbc = DbConnection.getConnection();
+    private static Connection dbc;
 
-    public Sensor(String sensorName, DataValue data) throws SQLException {
+    static {
+        try {
+            dbc = DbConnection.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ExtendedSensor(String sensorName, DataValue data) throws SQLException {
         this.sensorName = sensorName;
         this.data = data;
+    }
+
+    public ExtendedSensor(String sensorName) throws SQLException {
+        this(sensorName, new DataValue());
     }
 
     public String getId() {
