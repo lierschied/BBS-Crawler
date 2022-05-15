@@ -9,8 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        //path can be invoked as the first command line parameter
-        if (args.length <= 2) {
+        if (args.length >= 2) {
             String command = args[0];
 
             switch (command) {
@@ -35,8 +34,7 @@ public class Main {
     }
 
     private static void parseStream(String station) throws Exception {
-        StreamParser streamParser = new StreamParser(station);
-        streamParser.start();
+        new StreamParser(station).start();
     }
 
     private static void parseFiles(String dirPath) {

@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `opc`.`sensor` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `data_type` VARCHAR(45) NULL,
+  `data_value` VARCHAR(255) NULL,
   `updated_at` DATETIME NULL DEFAULT NOW(),
   `created_at` DATETIME NULL DEFAULT NOW(),
   PRIMARY KEY (`id`))
@@ -47,6 +48,15 @@ CREATE TABLE IF NOT EXISTS `opc`.`crawl` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `opc`.`station`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `opc`.`station` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `short` VARCHAR(45),
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

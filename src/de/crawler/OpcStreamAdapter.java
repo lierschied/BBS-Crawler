@@ -15,8 +15,7 @@ public class OpcStreamAdapter {
     private final OPCClientETS opcClient;
     private static Station station = Station.RL;
 
-    protected OpcStreamAdapter(Station station) throws Exception {
-        OpcStreamAdapter.station = station;
+    protected OpcStreamAdapter() throws Exception {
         this.opcClient = OPCClientETS.getInstance();
         this.opcClient.connectToMachine(station);
 
@@ -26,7 +25,7 @@ public class OpcStreamAdapter {
 
     private static OpcStreamAdapter getInstance() throws Exception {
         if (instance == null) {
-            instance = new OpcStreamAdapter(station);
+            instance = new OpcStreamAdapter();
         }
         return instance;
     }
