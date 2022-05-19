@@ -3,7 +3,7 @@ package de.crawler;
 import de.crawler.opc.models.DataValue;
 import de.crawler.opc.models.ExtendedSensor;
 import de.crawler.utils.Colorize;
-import de.judge.opc_ets.Station;
+import de.judge.opc_test.Station;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

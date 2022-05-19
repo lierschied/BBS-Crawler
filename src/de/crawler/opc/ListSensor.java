@@ -1,8 +1,8 @@
 package de.crawler.opc;
 
 import de.crawler.DbConnection;
-import de.judge.opc_ets.Sensor;
-import de.judge.opc_ets.SensorList;
+import de.judge.opc_test.Sensor;
+import de.judge.opc_test.SensorList;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
