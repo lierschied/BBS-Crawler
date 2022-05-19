@@ -1,0 +1,13 @@
+version: '3'
+services:
+  mysql:
+    container_name: opc-database
+    image: mysql:latest
+    ports:
+      - "3306:${MYSQL_PORT:-3306}"
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:-password}"
+volumes:
+  dbdata:
