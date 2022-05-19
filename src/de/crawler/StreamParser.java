@@ -67,9 +67,11 @@ public class StreamParser {
         int errorCount = 0;
 
         while (errorCount <= 10) {
+                System.out.println(stream.next());
             try {
-                parse(stream.next());
-            } catch (SQLException e) {
+                Thread.sleep(1000);
+                //parse(stream.next());
+            } catch (Exception e) {
                 e.printStackTrace();
                 errorCount++;
             }
@@ -84,6 +86,7 @@ public class StreamParser {
      * @throws SQLException @see ExtendedSensor.update()
      */
     private void parse(String item) throws SQLException {
+        System.out.println(item);
         String sensorName = firstGroupMatch(namePattern, item);
 
         String valuesMatch = firstGroupMatch(valuePattern, item);
