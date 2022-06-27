@@ -1,10 +1,4 @@
-package de.crawler.opc;
-
-import com.prosysopc.ua.client.MonitoredDataItem;
-import com.prosysopc.ua.stack.builtintypes.NodeId;
-
-import java.util.Arrays;
-import java.util.List;
+package de.crawler.opc.enums;
 
 public enum Station {
     Leitstand("Leitstand", "opc.tcp://192.168.0.200:4840"),
@@ -18,7 +12,7 @@ public enum Station {
     private final String name;
     private final String url;
 
-    private Station(String name, String url) {
+    Station(String name, String url) {
         this.name = name;
         this.url = url;
     }

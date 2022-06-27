@@ -2,11 +2,11 @@ package de.crawler.opc.models;
 
 public class DataValue {
 
-    private final String value;
-    private final String valueType;
-    private final String statusCode;
-    private final String sourceTimestamp;
-    private final String serverTimestamp;
+    private String value;
+    private String valueType;
+    private String statusCode;
+    private String sourceTimestamp;
+    private String serverTimestamp;
 
     public DataValue() {
         this("", "", "", "", "");
@@ -54,5 +54,9 @@ public class DataValue {
 
     public String getValue() {
         return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }

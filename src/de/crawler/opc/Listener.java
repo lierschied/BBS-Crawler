@@ -6,11 +6,20 @@ import com.prosysopc.ua.client.Subscription;
 import com.prosysopc.ua.client.SubscriptionNotificationListener;
 import com.prosysopc.ua.stack.builtintypes.*;
 import com.prosysopc.ua.stack.core.NotificationData;
-import de.crawler.utils.Colorize;
+import de.crawler.opc.models.Crawl;
+import de.crawler.opc.models.ExtendedSensor;
+
+import java.sql.SQLException;
+import java.util.HashMap;
 
 public class Listener implements SubscriptionNotificationListener {
 
-    private int updateCounter = 0;
+    private HashMap<String, ExtendedSensor> sensorList;
+
+
+    public Listener(HashMap<String, ExtendedSensor> sensorList) {
+        this.sensorList = sensorList;
+    }
 
     @Override
     public void onBufferOverflow(Subscription subscription, UnsignedInteger unsignedInteger, ExtensionObject[] extensionObjects) {
@@ -20,11 +29,23 @@ public class Listener implements SubscriptionNotificationListener {
     @Override
     public void onDataChange(Subscription subscription, MonitoredDataItem monitoredDataItem, DataValue dataValue) {
         String msg = String.format("Item '%s' changed its value from '%s' to '%s'",
-                monitoredDataItem.getNodeId(),
+                monitoredDataItem.getNodeId().getValue(),
                 monitoredDataItem.getValue().getValue(),
                 dataValue.getValue());
-        System.out.println(msg);
-        System.out.println(Colorize.blue("DataChange Event " + ++updateCounter));
+
+        ExtendedSensor sensor = sensorList.get(monitoredDataItem.getNodeId().getValue());
+        if (sensor != null) {
+            de.crawler.opc.models.DataValue dv = sensor.getData();
+            dv.setValue(String.valueOf(dataValue.getValue()));
+            sensor.setData(dv);
+
+            try {
+                sensor.update();
+                Crawl.addChangeEvent(sensor.getId(), msg, "");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

@@ -16,4 +16,13 @@ public class Crawl {
         stm.setString(3, filename);
         stm.executeUpdate();
     }
+
+    public static void addChangeEvent(String sensorId, String msg, String filename) throws SQLException {
+        Connection dbc = DbConnection.getConnection();
+        PreparedStatement stm = dbc.prepareStatement("INSERT INTO `crawl`(sensor_id, data, filename) VALUES (?, ?, ?)");
+        stm.setString(1, sensorId);
+        stm.setString(2, msg);
+        stm.setString(3, filename);
+        stm.executeUpdate();
+    }
 }
