@@ -1,9 +1,9 @@
 package de.crawler;
 
 import de.crawler.opc.ListSensor;
-import de.judge.opc_ets.OPCClientETS;
-import de.judge.opc_ets.SensorList;
-import de.judge.opc_ets.Station;
+import de.judge.opc_test.OPCClientETS;
+import de.judge.opc_test.SensorList;
+import de.judge.opc_test.Station;
 
 import java.io.InputStream;
 import java.util.Scanner;

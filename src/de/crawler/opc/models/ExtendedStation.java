@@ -1,7 +1,7 @@
 package de.crawler.opc.models;
 
 import de.crawler.DbConnection;
-import de.judge.opc_ets.Station;
+import de.judge.opc_test.Station;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
